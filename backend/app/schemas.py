@@ -124,6 +124,7 @@ class ComplianceEntry(BaseModel):
     field_5: str | None = None  # 请求头模板
     field_6: str | None = None  # 合规状态
     field_7: str | None = None  # 最近审查
+    field_8: str | None = None  # 日请求上限（试编排裁决依据）
 
 class ProxyEntry(BaseModel):
     """代理节点明细结构。"""
@@ -136,6 +137,8 @@ class ProxyEntry(BaseModel):
     field_5: str | None = None  # 可用率
     field_6: str | None = None  # 切换策略
     field_7: str | None = None  # 节点状态
+    field_8: str | None = None  # 节点容量（试编排名额计算依据）
+    field_9: str | None = None  # 适配站点（站点亲和，决定可服务的目标站点）
 
 class StorageEntry(BaseModel):
     """存储配置明细结构。"""

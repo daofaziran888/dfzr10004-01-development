@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.orchestration import orchestration
 from app.store import store
 
 MODULE = "compliance"
@@ -58,4 +59,15 @@ class ComplianceService:
         entry["status"] = target
         entry["pending"] = target != STATUS_ORDER[-1]
         entry["abnormal"] = action in NEGATIVE_ACTIONS
-        return entry, f"合规规则已{action}"
+        if action == "发布规则":
+            entry["合规状态"] = "已生效"
+        elif action == "废弃规则":
+            entry["合规状态"] = "已废弃"
+        # 规则发布或撤回都改变启动资格：立即重算相关采集计划的试编排结论
+        refresh_result = orchestration.refresh()
+        suffix = (
+            f"，{refresh_result['revoked_count']} 份采集计划因此失去启动资格"
+            if refresh_result["revoked_count"]
+            else "，相关采集计划已重新评估启动资格"
+        )
+        return entry, f"合规规则已{action}{suffix}"

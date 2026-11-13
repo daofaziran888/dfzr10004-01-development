@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.orchestration import orchestration
 from app.store import store
 
 MODULE = "taskplan"
@@ -55,7 +56,16 @@ class TaskplanService:
         target = ACTION_RULES[action]
         if target not in STATUS_ORDER:
             return None, f"目标状态「{target}」不在允许的状态序列里"
+        if action == "启动计划":
+            # 启动前必须通过试编排：合规规则、代理节点与并发名额联合裁决
+            verdict = orchestration.reserve(entry_id)
+            if not verdict["ok"]:
+                return None, verdict["message"]
+            orchestration.mark_running(entry_id)
         entry["status"] = target
         entry["pending"] = target != STATUS_ORDER[-1]
         entry["abnormal"] = action in NEGATIVE_ACTIONS
+        if action in ("暂停计划", "归档计划"):
+            # 退出运行即归还并发名额，后续试编排可以重新分配
+            orchestration.release(entry_id)
         return entry, f"采集计划已{action}"

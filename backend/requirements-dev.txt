@@ -1,0 +1,3 @@
+# 开发与回归测试依赖；运行时仅需 requirements.txt 中的 fastapi/uvicorn/pydantic。
+-r requirements.txt
+httpx>=0.27

@@ -27,9 +27,51 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .data-table th, .data-table td { border: 1px solid var(--border); padding: 8px 10px; font-size: 13px; text-align: left; }
 .empty-state { text-align: center; color: var(--muted); }
 .row-actions { display: flex; gap: 6px; }
-.btn { border: 1px solid var(--border); background: #fff; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+.btn { border: 1px solid var(--border); background: #fff; border-radius: 6px; padding: 6px 12px; cursor: pointer; text-decoration: none; color: inherit; font-size: 13px; display: inline-block; }
 .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
 .btn.ghost { background: transparent; }
 .link { border: none; background: none; color: var(--brand); cursor: pointer; padding: 0; }
 .page-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .error-text { color: #b42318; }
+.ok-text { color: #067647; }
+
+/* 试编排视图：风险分组看板 */
+.board-section-title { font-size: 15px; margin: 18px 0 8px; }
+.site-table { margin-bottom: 8px; }
+.kanban { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.kanban-column { background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px; padding: 10px; min-height: 200px; }
+.kanban-column.risk-ready { border-top: 3px solid #067647; }
+.kanban-column.risk-adjust { border-top: 3px solid #b54708; }
+.kanban-column.risk-reject { border-top: 3px solid #b42318; }
+.kanban-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.kanban-count { background: #fff; border: 1px solid var(--border); border-radius: 999px; padding: 1px 9px; font-size: 12px; }
+.kanban-empty { color: var(--muted); font-size: 12px; text-align: center; padding: 24px 0; }
+.plan-card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+.plan-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.plan-site { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.badge { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 12px; white-space: nowrap; }
+.badge.risk-ready { background: #dcfae6; color: #067647; }
+.badge.risk-adjust { background: #fef0c7; color: #b54708; }
+.badge.risk-reject { background: #fee4e2; color: #b42318; }
+.badge.risk-wait { background: #e0efff; color: #1f6feb; }
+.risk-ready { color: #067647; }
+.risk-adjust { color: #b54708; }
+.risk-reject { color: #b42318; }
+.plan-meta { margin: 8px 0; font-size: 12px; }
+.plan-meta dt { color: var(--muted); margin-top: 6px; }
+.plan-meta dd { margin: 2px 0 0; }
+.metric-row { display: flex; gap: 16px; }
+.metric { font-size: 16px; font-weight: 600; color: #1f2937; }
+.note-list { margin: 6px 0; padding-left: 16px; font-size: 12px; }
+.compliance-note { color: #1f6feb; }
+.reject-note { color: #b42318; }
+.proxy-note { color: #b54708; }
+.adjust-note { color: #b54708; }
+.plan-actions { display: flex; gap: 8px; margin-top: 8px; }
+.plan-actions .btn:disabled { opacity: .55; cursor: not-allowed; }
+.adjust-cell { font-size: 12px; color: #b54708; }
+
+/* 模块页内嵌的待处理清单 */
+.worklist { margin-top: 16px; }
+.worklist-title { font-size: 14px; margin-bottom: 6px; }
+.worklist-badge { background: #fee4e2; color: #b42318; border-radius: 999px; padding: 1px 8px; font-size: 12px; margin-left: 6px; }

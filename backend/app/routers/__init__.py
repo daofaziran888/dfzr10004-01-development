@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from app.routers import taskplan as router_taskplan
+from app.routers import orchestration as router_orchestration
 from app.routers import verify as router_verify
 from app.routers import pipeline as router_pipeline
 from app.routers import transform as router_transform
@@ -23,4 +24,4 @@ from app.routers import tag as router_tag
 from app.routers import version as router_version
 from app.routers import sandbox as router_sandbox
 
-ROUTERS = [router_taskplan, router_verify, router_pipeline, router_transform, router_dedup, router_retry, router_audit, router_compliance, router_proxy, router_storage, router_alert, router_report, router_throttle, router_tag, router_version, router_sandbox]
+ROUTERS = [router_taskplan, router_orchestration, router_verify, router_pipeline, router_transform, router_dedup, router_retry, router_audit, router_compliance, router_proxy, router_storage, router_alert, router_report, router_throttle, router_tag, router_version, router_sandbox]

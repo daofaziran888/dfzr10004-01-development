@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Overview from '@/views/Overview.vue'
 const Taskplan = () => import('@/views/taskplan/index.vue')
+const Orchestration = () => import('@/views/orchestration/index.vue')
 const Verify = () => import('@/views/verify/index.vue')
 const Pipeline = () => import('@/views/pipeline/index.vue')
 const Transform = () => import('@/views/transform/index.vue')
@@ -23,6 +24,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'overview', component: Overview },
     { path: '/taskplan', name: 'taskplan', component: Taskplan },
+    { path: '/orchestration', name: 'orchestration', component: Orchestration },
     { path: '/verify', name: 'verify', component: Verify },
     { path: '/pipeline', name: 'pipeline', component: Pipeline },
     { path: '/transform', name: 'transform', component: Transform },

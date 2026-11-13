@@ -59,6 +59,31 @@
       <span>共 {{ total }} 条采集合规配置记录</span>
       <span v-if="errorMessage" class="error-text">{{ errorMessage }}</span>
     </footer>
+
+    <section class="worklist">
+      <h3 class="worklist-title">
+        试编排合规待处理清单
+        <span class="worklist-badge">{{ worklist.total }} 项</span>
+      </h3>
+      <p class="page-desc">规则撤回或未生效时，相关采集计划会立即失去启动资格并在此留痕，而不只是计划页按钮变化。</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>规则编号</th><th>站点域名</th><th>合规状态</th><th>待处理原因</th><th>受影响采集计划</th></tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in worklist.items" :key="String(item.rule_id)">
+            <td>{{ item['规则编号'] }}</td>
+            <td>{{ item['站点域名'] }}</td>
+            <td>{{ item['合规状态'] }}</td>
+            <td>{{ item.issue }}</td>
+            <td>{{ item.affected_plans.join('、') || '—' }}</td>
+          </tr>
+          <tr v-if="!worklist.items.length">
+            <td colspan="5" class="empty-state">暂无合规待处理项，生效规则均满足在排计划要求</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </section>
 </template>
 
@@ -70,7 +95,7 @@ import { request } from '@/api/client'
 type Row = Record<string, string | number | null>
 
 const ENDPOINT = '/api/compliance'
-const columns = ["规则编号", "站点域名", "协议标识", "访问间隔", "并发上限", "请求头模板", "合规状态", "最近审查"]
+const columns = ["规则编号", "站点域名", "协议标识", "访问间隔", "并发上限", "日请求上限", "请求头模板", "合规状态", "最近审查"]
 const actions = ["提交审批", "发布规则", "废弃规则"]
 const statuses = ["草稿", "待审批", "已生效", "已废弃"]
 const stats = [{"label": "合规规则总数", "value": 0}, {"label": "已生效规则", "value": 0}, {"label": "待审批规则", "value": 0}]
@@ -80,6 +105,16 @@ const total = ref(0)
 const errorMessage = ref('')
 const filters = ref<Record<string, string>>({})
 const filterFields = columns.slice(0, 3)
+type ComplianceWorkItem = {
+  rule_id: number
+  规则编号: string
+  站点域名: string
+  合规状态: string
+  issue: string
+  affected_plans: string[]
+}
+
+const worklist = ref<{ total: number; items: ComplianceWorkItem[] }>({ total: 0, items: [] })
 
 function resetFilters() {
   filters.value = {}
@@ -105,8 +140,20 @@ async function runAction(action: string, row: Row) {
       throw new Error('采集合规配置动作未生效，请稍后重试')
     }
     await reload()
+    await loadWorklist()
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : '采集合规配置操作失败'
+  }
+}
+
+async function loadWorklist() {
+  try {
+    const response = await request('/api/orchestration/worklist/compliance')
+    if (response.ok) {
+      worklist.value = await response.json()
+    }
+  } catch {
+    worklist.value = { total: 0, items: [] }
   }
 }
 
@@ -126,5 +173,8 @@ async function reload() {
   }
 }
 
-onMounted(reload)
+onMounted(() => {
+  void reload()
+  void loadWorklist()
+})
 </script>

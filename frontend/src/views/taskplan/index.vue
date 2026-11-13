@@ -6,7 +6,8 @@
         <p class="page-desc">维护采集计划的站点配置、频率设置与资源分配，为采集任务编排提供可验证的数据工程流程。</p>
       </div>
       <div class="page-actions">
-        <button class="btn primary" type="button" @click="openCreate">登记采集计划</button>
+        <RouterLink class="btn primary" to="/orchestration">打开试编排视图</RouterLink>
+        <button class="btn" type="button" @click="openCreate">登记采集计划</button>
         <button class="btn" type="button" @click="exportRows">导出采集任务编排清单</button>
       </div>
     </header>
@@ -101,8 +102,9 @@ async function runAction(action: string, row: Row) {
       method: 'POST',
       body: JSON.stringify({ action }),
     })
-    if (!response.ok) {
-      throw new Error('采集任务编排动作未生效，请稍后重试')
+    const payload = await response.json().catch(() => null)
+    if (!response.ok || !payload?.ok) {
+      throw new Error(payload?.message ?? '采集任务编排动作未生效，请稍后重试')
     }
     await reload()
   } catch (error) {

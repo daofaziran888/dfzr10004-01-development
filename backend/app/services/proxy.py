@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.orchestration import orchestration
 from app.store import store
 
 MODULE = "proxy"
@@ -58,4 +59,15 @@ class ProxyService:
         entry["status"] = target
         entry["pending"] = target != STATUS_ORDER[-1]
         entry["abnormal"] = action in NEGATIVE_ACTIONS
-        return entry, f"代理节点已{action}"
+        if action == "启用节点":
+            entry["节点状态"] = "在线"
+        elif action == "停用节点":
+            entry["节点状态"] = "离线"
+        # 节点启用/停用都会改变代理容量：立即重算，失格计划同步释放名额
+        refresh_result = orchestration.refresh()
+        suffix = (
+            f"，{refresh_result['revoked_count']} 份采集计划因此失去启动资格"
+            if refresh_result["revoked_count"]
+            else "，相关采集计划已重新评估启动资格"
+        )
+        return entry, f"代理节点已{action}{suffix}"
